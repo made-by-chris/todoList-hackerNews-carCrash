@@ -1,11 +1,11 @@
 import React from "react";
-export default function TodoForm({ addTodo }) {
+export default function ArticleForm({ addArticle }) {
   const [value, setValue] = React.useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!value) return;
-    addTodo(value);
+    addArticle(value);
     setValue("");
   };
 

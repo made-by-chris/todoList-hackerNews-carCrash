@@ -1,65 +1,74 @@
 import React, { useState, useEffect } from "react";
 import "./App.css";
-import Todo from "./Todo";
-import TodoForm from "./TodoForm";
+import Article from "./Article";
+import ArticleForm from "./ArticleForm";
 
 function App() {
-  const [todos, setTodos] = useState([]);
+  const [articles, setArticles] = useState([]);
   const [query, setQuery] = useState("");
+  const [selectedIndex, setSelectedIndex] = useState(1)
 
   useEffect(() => {
-    console.log("todolist changed!");
-  }, [todos]);
+    console.log("articlelist changed!");
+  }, [articles]);
 
   useEffect(() => {
     fetch("https://hn.algolia.com/api/v1/search?query=penguins")
       .then((response) => response.json())
       .then((response) => {
         console.log(response);
-        const newTodos = response.hits
+        const newArticles = response.hits
           .map((result) => ({
+            created_at: result.created_at,
+            author: result.author,
             text: result.title,
             url: result.url,
             num_comments: result.num_comments,
             isCompleted: false,
           }))
           .sort((a, b) => (a.num_comments > b.num_comments ? -1 : 1));
-        setTodos(newTodos);
+        setArticles(newArticles);
         setQuery(response.query);
       });
   }, []);
 
-  const addTodo = (text) => {
-    const newTodos = [...todos, { text }];
-    setTodos(newTodos);
+  const expandArticle = (index) => {
+    setSelectedIndex(index);
+  }
+
+  const addArticle = (text) => {
+    const newArticles = [...articles, { text }];
+    setArticles(newArticles);
   };
 
-  const completeTodo = (index) => {
-    const newTodos = [...todos];
-    newTodos[index].isCompleted = !newTodos[index].isCompleted;
-    setTodos(newTodos);
+  const completeArticle = (index) => {
+    const newArticles = [...articles];
+    newArticles[index].isCompleted = !newArticles[index].isCompleted;
+    setArticles(newArticles);
   };
 
-  const removeTodo = (index) => {
-    const newTodos = [...todos];
-    newTodos.splice(index, 1);
-    setTodos(newTodos);
+  const removeArticle = (index) => {
+    const newArticles = [...articles];
+    newArticles.splice(index, 1);
+    setArticles(newArticles);
   };
 
   return (
     <div className="app">
-      <div className="todo-list">
+      <div className="article-list">
         <h1>{query}</h1>
-        {todos.map((todo, index) => (
-          <Todo
+        {articles.map((article, index) => (
+          <Article
+            expand={expandArticle}
             key={index}
+            selectedIndex = {selectedIndex}
             index={index}
-            todo={todo}
-            completeTodo={completeTodo}
-            removeTodo={removeTodo}
+            article={article}
+            completeArticle={completeArticle}
+            removeArticle={removeArticle}
           />
         ))}
-        <TodoForm addTodo={addTodo} />
+        <ArticleForm addArticle={addArticle} />
       </div>
     </div>
   );

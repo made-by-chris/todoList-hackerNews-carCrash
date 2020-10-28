@@ -2,9 +2,11 @@
   background: #209cee;
   height: 100vh;
   padding: 30px;
+  display: flex;
+  justify-content: center;
 }
 
-.todo-list {
+.article-list {
   background: #e8e8e8;
   border-radius: 4px;
   max-width: 400px;
@@ -21,4 +23,10 @@
   justify-content: space-between;
   margin-bottom: 6px;
   padding: 3px 10px;
+}
+.moreInfo {
+  padding: 15px;
+  border: 1px solid black; 
+  background: #CCC;
+
 }
